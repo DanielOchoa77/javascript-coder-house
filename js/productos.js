@@ -12,7 +12,7 @@ export class Producto{
     }
 }
 
-export function inicializarProductos(arrayDeProductos) {
+/*export function inicializarProductos(arrayDeProductos) {
     arrayDeProductos.push(new Producto({
         id:arrayDeProductos.length +1,
         precio:284.361,
@@ -93,7 +93,7 @@ export function inicializarProductos(arrayDeProductos) {
         img:"./assets/img/tenis8.jfif"
     }));
 }
-
+*/
 export const agregarAlCarrito = (carrito, producto) => {
     carrito.push(producto)
 }
