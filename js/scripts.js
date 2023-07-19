@@ -139,7 +139,7 @@ carritoButton.addEventListener("click", () => {
         </div>`;
         paymentButton.setAttribute('disabled', '');
 
-    }else{
+    } else {
         paymentButton.removeAttribute('disabled');
     }
 })
@@ -311,7 +311,7 @@ paymentButton.addEventListener("click", () => {
         if (result.isConfirmed) {
             Swal.fire(
                 'Pago Exitoso!',
-                'Muchas gracias por tu compra, tu pago ha sido exitoso con N° de pedido 24234.',
+                'Muchas gracias por tu compra, tu pago ha sido exitoso con N° de pedido ' + Math.floor(Math.random() * 100),
                 'success'
             )
             localStorage.removeItem("carrito");
