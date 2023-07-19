@@ -137,11 +137,9 @@ carritoButton.addEventListener("click", () => {
         <div class="slide-header">
          <i class="bi bi-cart-x-fill img-cart-empty"></i>
         </div>`;
-        const paymentButton = document.querySelector("#paymentButton");
         paymentButton.setAttribute('disabled', '');
 
     }else{
-        const paymentButton = document.querySelector("#paymentButton"); 
         paymentButton.removeAttribute('disabled');
     }
 })
@@ -282,6 +280,8 @@ function recalcularCarrito() {
     ivaPago.value = iva;
     total.value = valorTotal;
 
+    const paymentButton = document.querySelector("#paymentButton");
+
     if (arrayCarrito.length == 0) {
         listaCarrito.innerHTML = ` <div class="text-center lead fw-normal text-black-50 mb-0">
                                     ¡Tu carrito esta vacío!
@@ -289,10 +289,8 @@ function recalcularCarrito() {
                                          <i class="bi bi-cart-x-fill img-cart-empty"></i>
                                     </div>`;
 
-        const paymentButton = document.querySelector("#paymentButton");
         paymentButton.setAttribute('disabled', '');
     } else {
-        const paymentButton = document.querySelector("#paymentButton");
         paymentButton.removeAttribute('disabled');
     }
 
