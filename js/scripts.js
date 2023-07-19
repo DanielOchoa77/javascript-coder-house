@@ -137,6 +137,12 @@ carritoButton.addEventListener("click", () => {
         <div class="slide-header">
          <i class="bi bi-cart-x-fill img-cart-empty"></i>
         </div>`;
+        const paymentButton = document.querySelector("#paymentButton");
+        paymentButton.setAttribute('disabled', '');
+
+    }else{
+        const paymentButton = document.querySelector("#paymentButton"); 
+        paymentButton.removeAttribute('disabled');
     }
 })
 
@@ -266,7 +272,7 @@ function recalcularCarrito() {
 
     });
 
-    let monto = parseFloat((arrayCarrito.reduce((acumulador, prod) => acumulador + prod.precio, 0)).toFixed(3));
+    let monto = parseFloat((arrayCarrito.reduce((acumulador, prod) => acumulador + prod.precioFinal, 0)).toFixed(3));
     let procentajeIva = 18;
     let iva = parseFloat(((monto * procentajeIva) / 100).toFixed(3));
     let valorTotal = (monto + iva).toFixed(3);
@@ -282,6 +288,12 @@ function recalcularCarrito() {
                                     <div class="slide-header">
                                          <i class="bi bi-cart-x-fill img-cart-empty"></i>
                                     </div>`;
+
+        const paymentButton = document.querySelector("#paymentButton");
+        paymentButton.setAttribute('disabled', '');
+    } else {
+        const paymentButton = document.querySelector("#paymentButton");
+        paymentButton.removeAttribute('disabled');
     }
 
 }
