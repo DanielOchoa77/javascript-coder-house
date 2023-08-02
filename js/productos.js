@@ -1,13 +1,13 @@
-export class Producto{
-    constructor(productoRecibidoPorParametro){
-        const { id , precio , nombre, promo, precioPromo, recomendado,img} = productoRecibidoPorParametro;
-       this.id = id;
-       this.precio = precio;
-       this.nombre = nombre;
-       this.promo  = promo;
-       this.precioPromo = precioPromo;
-       this.recomendado = recomendado;
-       this.img = img;
+export class Producto {
+    constructor(productoRecibidoPorParametro) {
+        const { id, precio, nombre, promo, precioPromo, recomendado, img } = productoRecibidoPorParametro;
+        this.id = id;
+        this.precio = precio;
+        this.nombre = nombre;
+        this.promo = promo;
+        this.precioPromo = precioPromo;
+        this.recomendado = recomendado;
+        this.img = img;
 
     }
 }
@@ -95,14 +95,17 @@ export class Producto{
 }
 */
 export const agregarAlCarrito = (carrito, producto) => {
-    carrito.push(producto)
+    carrito.push(producto);
+    for (let i = 0; i < carrito.length; i++) {
+        carrito[i].item = i+1;
+    }
 }
 
 export const eliminarDelCarrito = (carrito, producto) => {
-    carrito = carrito.filter(prod => prod.id != producto.id);
+    carrito = carrito.filter(prod => prod.item != producto.item);
+    for (let i = 0; i < carrito.length; i++) {
+        carrito[i].item = i+1;
+    }
     localStorage.removeItem("carrito");
     localStorage.setItem("carrito", JSON.stringify(carrito));
 }
-
-
-export const CANTIDAD_MAXIMA_DEL_CARRITO = 10;

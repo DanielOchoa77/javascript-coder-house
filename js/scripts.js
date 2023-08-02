@@ -1,6 +1,6 @@
 import { agregarAlCarrito, eliminarDelCarrito } from './productos.js'
 
-const arrayDeProductos = [];
+let arrayDeProductos = [];
 let arrayCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
 async function inicializarProductos() {
@@ -171,7 +171,7 @@ function recalcularCarrito() {
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
-                    <button id="buttonModal-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                    <button id="buttonModal-${prod.item}" type="button" class="btn btn-outline-dark mt-auto">
                         Eliminar del carrito
                     </button>
                     </div>
@@ -205,7 +205,7 @@ function recalcularCarrito() {
                 </div>
                 <!-- Product actions-->
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
-                <button id="buttonModal-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                <button id="buttonModal-${prod.item}" type="button" class="btn btn-outline-dark mt-auto">
                     Eliminar del carrito
                 </button>
                 </div>
@@ -231,7 +231,7 @@ function recalcularCarrito() {
                 </div>
                 <!-- Product actions-->
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
-                    <button id="buttonModal-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                    <button id="buttonModal-${prod.item}" type="button" class="btn btn-outline-dark mt-auto">
                         Eliminar del carrito
                     </button>
                 </div>
@@ -242,12 +242,12 @@ function recalcularCarrito() {
         card.innerHTML = cardItem;
         listaCarrito.appendChild(card);
 
-        const buttonEliminar = document.querySelector("#buttonModal-" + prod.id);
+        const buttonEliminar = document.querySelector("#buttonModal-" + prod.item);
 
         buttonEliminar.addEventListener("click", () => {
             Swal.fire({
                 title: 'Estas seguro?',
-                text: "Se eliminara este producto del carrito!",
+                text: "Se eliminara el producto # " + prod.item + " - " + prod.nombre + " del carrito!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -298,7 +298,6 @@ function recalcularCarrito() {
 
 
 paymentButton.addEventListener("click", () => {
-
     Swal.fire({
         title: 'Estas seguro?',
         text: "Realizaras el pago de los productos del carrito!",
@@ -321,3 +320,154 @@ paymentButton.addEventListener("click", () => {
         }
     })
 })
+
+const allprodOption = document.querySelector("#allprod");
+
+allprodOption.addEventListener("click", () => {
+    console.log("allprod");
+    inicializarProductosFiltrados("allprod");
+})
+
+const promoprodOption = document.querySelector("#promoprod");
+
+promoprodOption.addEventListener("click", () => {
+    console.log("promoprod");
+    inicializarProductosFiltrados("promoprod");
+})
+
+const popuprodOption = document.querySelector("#popuprod");
+
+popuprodOption.addEventListener("click", () => {
+    console.log("popuprod");
+    inicializarProductosFiltrados("popuprod");
+})
+
+async function inicializarProductosFiltrados(option) {
+    const response = await fetch("./js/listaproductos.json");
+    let productosJson = await response.json();
+    switch (option) {
+        case "popuprod":
+            productosJson = productosJson.filter(prod => prod.recomendado);
+            console.log(productosJson);
+            break;
+        case "promoprod":
+            productosJson = productosJson.filter(prod => prod.promo == true);
+            break;
+        default:
+            break;
+    }
+
+    arrayDeProductos = [];
+    productos.innerHTML = "";
+    productosJson.forEach((prod) => {
+        arrayDeProductos.push(prod);
+        const card = document.createElement("div");
+        card.classList.add("col");
+        card.classList.add("mb-5");
+        let cardItem = "";
+        if (!prod.promo) {
+            cardItem = `
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="${prod.img}" alt="..." />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">${prod.nombre}</h5>
+                            <!-- Product price-->
+                            $${prod.precio}
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                    <button id="button-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                        Agregar al carrito
+                    </button>
+                    </div>
+                </div>
+            `;
+        } else if (prod.promo && prod.recomendado) {
+            cardItem = `
+            <div class="card h-100">
+                <!-- Sale badge-->
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Promo
+                </div>
+                <!-- Product image-->
+                <img class="card-img-top" src="${prod.img}" alt="..." />
+                <!-- Product details-->
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <!-- Product name-->
+                        <h5 class="fw-bolder">${prod.nombre}</h5>
+                        <!-- Product reviews-->
+                        <div class="d-flex justify-content-center small text-warning mb-2">
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                        </div>
+                        <!-- Product price-->
+                        <span class="text-muted text-decoration-line-through">$${prod.precio}</span>
+                        $${prod.precioPromo}
+                    </div>
+                </div>
+                <!-- Product actions-->
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                <button id="button-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                     Agregar al carrito
+                </button>
+                </div>
+            </div>
+        `
+        } else if (prod.promo && !prod.recomendado) {
+            cardItem = `
+            <div class="card h-100">
+                <!-- Sale badge-->
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Promo
+                </div>
+                <!-- Product image-->
+                <img class="card-img-top" src="${prod.img}" alt="..." />
+                <!-- Product details-->
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <!-- Product name-->
+                        <h5 class="fw-bolder">${prod.nombre}</h5>
+                        <!-- Product price-->
+                        <span class="text-muted text-decoration-line-through">$${prod.precio}</span>
+                        $${prod.precioPromo}
+                    </div>
+                </div>
+                <!-- Product actions-->
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                    <button id="button-${prod.id}" type="button" class="btn btn-outline-dark mt-auto">
+                            Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        `
+        }
+
+        card.innerHTML = cardItem;
+        productos.appendChild(card);
+
+        const buttonAgregar = document.querySelector("#button-" + prod.id);
+
+        buttonAgregar.addEventListener("click", () => {
+            agregarAlCarrito(arrayCarrito, prod);
+            localStorage.setItem("carrito", JSON.stringify(arrayCarrito));
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Se agrego al carrito el producto ' + prod.nombre,
+                showConfirmButton: true,
+                confirmButtonText: 'Ok',
+                timer: 3000
+            })
+            arrayCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            countItemsCarrito.innerText = arrayCarrito.length;
+        })
+
+    })
+}
